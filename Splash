@@ -1,0 +1,36 @@
+public class splash extends AppCompatActivity {
+
+
+    private ImageView imgsplash;
+    conexion con;
+    @Override
+    protected void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_splash);
+        con = new conexion();
+
+        imgsplash = (ImageView) findViewById(R.id.imgsplash);
+        Animation anim = AnimationUtils.loadAnimation(this, R.anim.transicion);
+        imgsplash.startAnimation(anim);
+        final Intent i = new Intent(this, login.class);
+        Thread t = new Thread() {
+            public void run() {
+                try {
+                    sleep(5000);
+                }catch (InterruptedException e){
+                    e.printStackTrace();
+                }finally {
+                    if (con.IsOnline()!=false){
+                        startActivity(i);
+                        finish();
+                    }else {
+
+                    }
+                }
+            }
+        };
+
+        t.start();
+
+    }
+}
