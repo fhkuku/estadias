@@ -1,0 +1,26 @@
+<?php
+include("Conexion.php");
+
+$json=array();
+if(isset($_GET['username']) && isset($_GET['password'])){	
+	$username=$_GET['username'];
+	$password=$_GET['password'];
+	$consulta="Select Id, Nombre, Tipo From Usuarios Where Nombre='$username' and Clave='$password'";
+	$resultado=sqlsrv_query($conn,$consulta);
+	if($result=sqlsrv_fetch_array($resultado)){
+		$json[]['Id']=$result['ID'];
+		$json[]['Nombre']=$result['nombre'];
+		$json[]['Tipo']=$result['tipo'];		
+	}else{
+
+	}
+	sqlsrv_close($conn);
+	echo json_encode($json);
+}
+else{
+	$resultar["success"]=0;
+	$resultar["message"]='Web Service No Retorna';
+	$json['usuario'][]=$resultar;
+	echo json_encode($json);
+}
+?>
