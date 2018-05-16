@@ -1,0 +1,71 @@
+public class login extends AppCompatActivity {
+
+    private Button btnIniciar;
+    private EditText username, password;
+    conexion con;
+    ProgressBar progressBar;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+        con = new conexion();
+
+        btnIniciar = (Button) findViewById(R.id.btnIniciar);
+        username = (EditText) findViewById(R.id.username);
+        password = (EditText) findViewById(R.id.password);
+        progressBar =(ProgressBar) findViewById(R.id.progreso);
+        progressBar.setVisibility(View.INVISIBLE);
+
+        btnIniciar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (username.getText().toString().equals("")){
+                    username.setError("Ingresa tu usuario");
+                }else if (password.getText().toString().equals("")){
+                    password.setError("Ingrese una contraseña");
+                }
+
+                else if (username.getText().toString() != "" && password.getText().toString() != "") {
+                    if (con.IsOnline() != false) {
+
+                        progressBar.setVisibility(View.VISIBLE);
+                        btnIniciar.setVisibility(View.INVISIBLE);
+                        IniciarSesion(username.getText().toString(), password.getText().toString());
+                    } else {
+                        Toast.makeText(getApplicationContext(), "No hay conexion a internet", Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+        });
+
+    }
+
+
+    public void IniciarSesion(String us, String con) {
+        String URL = "http://mzfinan.dyndns.org:81/wslafin/IniciarSesion.php?username=" + us + "&password=" + con;
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, URL, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray respuesta) {
+                if (respuesta.length()>0){
+                    Intent i = new Intent(getApplicationContext(), menu.class);
+                    startActivity(i);
+                    finish();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Incorrecto", Toast.LENGTH_LONG).show();
+                    btnIniciar.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), "Usuario o contraseña"+error.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
+        requestQueue.add(request);
+    }
+}
