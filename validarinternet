@@ -1,0 +1,15 @@
+public class conexion {
+
+    public Boolean IsOnline(){
+        try{
+            Process process = java.lang.Runtime.getRuntime().exec("ping -c 1 www.google.com");
+            int val = process.waitFor();
+            boolean Respuesta = (val==0);
+            return Respuesta;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+}
