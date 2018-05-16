@@ -24,3 +24,21 @@ else{
 	echo json_encode($json);
 }
 ?>
+
+
+
+
+
+<?php 
+$serverName = "MZSRVR\COMPAC";
+$connectionInfo = array( "Database"=>"Micros","UID"=>"Francisco","PWD"=>"pina11");
+$conn = sqlsrv_connect( $serverName, $connectionInfo);
+
+if($conn){
+	//echo('Conectado');
+}else{
+	echo('No se pudo conectar<br/>');
+	die( print_r( sqlsrv_errors(), true));
+}  
+return($conn);
+?>
