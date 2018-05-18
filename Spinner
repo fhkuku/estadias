@@ -1,0 +1,68 @@
+-----Clase-----
+
+package com.example.pilot.lafin.Clases;
+
+public class Sucursales {
+
+    private String Sucursales;
+
+    public Sucursales() {
+    }
+
+    public Sucursales(String Sucursales) {
+        this.setSucursales(Sucursales);
+    }
+
+    public String getSucursales() {
+        return Sucursales;
+    }
+
+    public void setSucursales(String sucursales) {
+        Sucursales = sucursales;
+    }
+
+    public String toString() {
+        return Sucursales;
+    }
+}
+
+
+-----Método-----
+
+private void LlenarSpinnerSuc() {
+        String url = "http://mzfinan.dyndns.org:81/wslafin/Sucursales.php";
+        client.post(url, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                if (statusCode == 200) {
+                    cargarSpinnerSuc(new String(responseBody));
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Toast.makeText(getContext(), "¡Errror!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void cargarSpinnerSuc(String respuesta) {
+        ArrayList<Sucursales> listaSuc = new ArrayList<Sucursales>();
+        try {
+            JSONArray jsonArray = new JSONArray(respuesta);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                Sucursales suc = new Sucursales();
+                suc.setSucursales(jsonArray.getJSONObject(i).getString("Sucursales"));
+                listaSuc.add(suc);
+            }
+            ArrayAdapter adapter = new ArrayAdapter<Sucursales>(getContext(), android.R.layout.simple_list_item_1, listaSuc);
+            spinnerSucursales.setAdapter(adapter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+-----Dependencia-----
+
+compile 'com.loopj.android:android-async-http:1.4.9'
