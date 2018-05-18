@@ -29,6 +29,8 @@ public class Sucursales {
 
 -----Método-----
 
+AsyncHttpClient client;
+
 private void LlenarSpinnerSuc() {
         String url = "http://mzfinan.dyndns.org:81/wslafin/Sucursales.php";
         client.post(url, new AsyncHttpResponseHandler() {
